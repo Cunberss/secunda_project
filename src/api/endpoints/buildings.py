@@ -1,16 +1,10 @@
-# src/api/endpoints/buildings.py
-from typing import List, Optional
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy.ext.asyncio import AsyncSession
-from src.core.database import get_session
+from src.core.deps import get_building_service
 from src.services.building_service import BuildingService
 from src.schemas.building import BuildingCreate, BuildingUpdate, BuildingOut, BuildingList
 
 router = APIRouter(prefix="/buildings", tags=["buildings"])
-
-
-async def get_building_service(db: AsyncSession = Depends(get_session)) -> BuildingService:
-    return BuildingService(db)
 
 
 @router.get("/", response_model=BuildingList, summary="Получить список зданий")
