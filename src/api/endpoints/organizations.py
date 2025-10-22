@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Query, Path, Depends
+from fastapi import APIRouter, Query, Path, Depends, HTTPException
 
 from src.core.deps import get_organization_service
-from src.schemas.organization import OrganizationOut
+from src.schemas.organization import OrganizationBase
 from src.services.organization_service import OrganizationService
 
 router = APIRouter(prefix="/organizations", tags=["Организации"])
 
 
-@router.get("/search", response_model=list[OrganizationOut])
+@router.get("/search", response_model=list[OrganizationBase])
 async def search_by_name(
         query: str = Query(..., description="Часть названия организации"),
         service: OrganizationService = Depends(get_organization_service),
@@ -16,7 +16,7 @@ async def search_by_name(
     return await service.search_by_name(query)
 
 
-@router.get("/nearby", response_model=list[OrganizationOut])
+@router.get("/nearby", response_model=list[OrganizationBase])
 async def list_in_radius(
     latitude: float = Query(..., description="Широта центра"),
     longitude: float = Query(..., description="Долгота центра"),
@@ -27,7 +27,7 @@ async def list_in_radius(
     return await service.list_in_radius(latitude, longitude, radius_km)
 
 
-@router.get("/bbox", response_model=list[OrganizationOut])
+@router.get("/bbox", response_model=list[OrganizationBase])
 async def list_in_bbox(
     lat1: float = Query(..., description="Минимальная широта (юго-запад)"),
     lon1: float = Query(..., description="Минимальная долгота (юго-запад)"),
@@ -39,7 +39,7 @@ async def list_in_bbox(
     return await service.list_in_bbox(lat1, lon1, lat2, lon2)
 
 
-@router.get("/{org_id}", response_model=OrganizationOut)
+@router.get("/{org_id}", response_model=OrganizationBase)
 async def get_organization(
         org_id: int = Path(..., description="ID организации"),
         service: OrganizationService = Depends(get_organization_service),
@@ -47,12 +47,11 @@ async def get_organization(
     """Вывод информации об организации по её идентификатору."""
     org = await service.get_by_id(org_id)
     if not org:
-        from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Организация не найдена")
     return org
 
 
-@router.get("/by_building/{building_id}", response_model=list[OrganizationOut])
+@router.get("/by_building/{building_id}", response_model=list[OrganizationBase])
 async def list_by_building(
         building_id: int,
         service: OrganizationService = Depends(get_organization_service),
@@ -61,7 +60,7 @@ async def list_by_building(
     return await service.list_by_building(building_id)
 
 
-@router.get("/by_activity/{activity_id}", response_model=list[OrganizationOut])
+@router.get("/by_activity/{activity_id}", response_model=list[OrganizationBase])
 async def list_by_activity(
         activity_id: int,
         service: OrganizationService = Depends(get_organization_service),
@@ -70,7 +69,7 @@ async def list_by_activity(
     return await service.list_by_activity(activity_id)
 
 
-@router.get("/by_activity_tree/{activity_id}", response_model=list[OrganizationOut])
+@router.get("/by_activity_tree/{activity_id}", response_model=list[OrganizationBase])
 async def list_by_activity_tree(
         activity_id: int,
         service: OrganizationService = Depends(get_organization_service),

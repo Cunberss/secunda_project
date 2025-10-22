@@ -2,13 +2,13 @@ from typing import List
 from fastapi import APIRouter, Depends, Query
 
 from src.core.deps import get_building_service
-from src.schemas.building import BuildingOut
+from src.schemas.building import BuildingBase
 from src.services.building_service import BuildingService
 
-router = APIRouter(prefix="/buildings", tags=["buildings"])
+router = APIRouter(prefix="/buildings", tags=["Здания"])
 
 
-@router.get("/bbox", response_model=List[BuildingOut], summary="Поиск зданий в bounding box")
+@router.get("/bbox", response_model=List[BuildingBase], summary="Поиск зданий в bounding box")
 async def search_buildings_in_bbox(
         lat1: float = Query(..., description="Минимальная широта (юго-запад)"),
         lon1: float = Query(..., description="Минимальная долгота (юго-запад)"),
@@ -19,7 +19,7 @@ async def search_buildings_in_bbox(
     return await service.list_in_bbox(lat1, lon1, lat2, lon2)
 
 
-@router.get("/nearby", response_model=list[BuildingOut])
+@router.get("/nearby", response_model=list[BuildingBase], summary="Поиск зданий в заданном радиусе")
 async def list_in_radius(
         latitude: float = Query(..., description="Широта центра"),
         longitude: float = Query(..., description="Долгота центра"),

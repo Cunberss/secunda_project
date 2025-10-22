@@ -3,6 +3,7 @@ from typing import Optional, List
 
 
 class ActivityBase(BaseModel):
+    id: int
     name: str = Field(..., min_length=1, max_length=200, description="Название деятельности")
     parent_id: Optional[int] = Field(None, description="ID родительской деятельности (если есть)")
 
@@ -12,13 +13,22 @@ class ActivityBase(BaseModel):
             raise ValueError("Название не может быть пустым")
         return v.strip()
 
-
-class ActivityOut(ActivityBase):
-    id: int
-    children: List["ActivityOut"] = []
-
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "name": "Образование",
+                "parent_id": None,
+            }
+        }
+
+
+class ActivityDetails(ActivityBase):
+    id: int
+    children: List["ActivityDetails"] = []
+
+    class Config:
         json_schema_extra = {
             "example": {
                 "id": 1,

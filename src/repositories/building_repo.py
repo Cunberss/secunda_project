@@ -1,7 +1,9 @@
 from geoalchemy2 import WKTElement
 from shapely.geometry import box
 from sqlalchemy import func, select
-from src.models import Building
+from sqlalchemy.orm import contains_eager
+
+from src.models import Building, Organization
 from src.repositories.base import BaseRepository
 
 
@@ -13,20 +15,32 @@ class BuildingRepository(BaseRepository[Building]):
 
         query = (
             select(Building)
+            .join(Building.organizations)
+            .join(Organization.activities)
             .where(func.ST_Intersects(Building.geom, bbox_geom))
+            .options(
+                contains_eager(Building.organizations)
+                .contains_eager(Organization.activities)
+            )
         )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.unique().scalars().all()
 
     async def list_in_radius(self, latitude: float, longitude: float, radius_km: float):
         query = (
             select(Building)
+            .join(Building.organizations)
+            .join(Organization.activities)
             .where(
                 func.ST_DistanceSphere(
                     Building.geom,
                     func.ST_MakePoint(longitude, latitude)
                 ) <= radius_km * 1000
             )
+            .options(
+                contains_eager(Building.organizations)
+                .contains_eager(Organization.activities)
+            )
         )
         result = await self.db.execute(query)
-        return result.scalars().all()
+        return result.unique().scalars().all()
