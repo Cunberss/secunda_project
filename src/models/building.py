@@ -1,7 +1,7 @@
 from sqlalchemy import String, Float, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from geoalchemy2 import Geometry
-from src.core.database import Base
+from src.core import Base
 
 
 class Building(Base):

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional
 
 
 class BuildingBase(BaseModel):
@@ -14,24 +13,6 @@ class BuildingBase(BaseModel):
         return v.strip()
 
 
-class BuildingCreate(BuildingBase):
-    """Схема для создания нового здания."""
-    pass
-
-
-class BuildingUpdate(BaseModel):
-    """Схема для обновления существующего здания."""
-    address: Optional[str] = Field(None, min_length=1, max_length=500)
-    latitude: Optional[float] = Field(None, ge=-90, le=90)
-    longitude: Optional[float] = Field(None, ge=-180, le=180)
-
-    @field_validator("address")
-    def validate_address(cls, v):
-        if v is not None and not v.strip():
-            raise ValueError("Адрес не может быть пустым")
-        return v.strip() if v else v
-
-
 class BuildingOut(BuildingBase):
     id: int = Field(..., description="ID здания")
 
@@ -43,31 +24,5 @@ class BuildingOut(BuildingBase):
                 "address": "г. Москва, ул. Ленина 1",
                 "latitude": 55.7558,
                 "longitude": 37.6176,
-            }
-        }
-
-
-class BuildingList(BaseModel):
-    items: list[BuildingOut]
-    total: int
-
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "items": [
-                    {
-                        "id": 1,
-                        "address": "г. Москва, ул. Ленина 1",
-                        "latitude": 55.7558,
-                        "longitude": 37.6176,
-                    },
-                    {
-                        "id": 2,
-                        "address": "г. Екатеринбург, ул. Мира 10",
-                        "latitude": 56.8389,
-                        "longitude": 60.6057,
-                    },
-                ],
-                "total": 2,
             }
         }

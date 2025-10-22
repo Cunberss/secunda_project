@@ -1,9 +1,9 @@
-from fastapi import Depends
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.core.database import get_session
+from src.core.service_factory import get_service_factory
+from src.models import Building, Organization
+from src.repositories.building_repo import BuildingRepository
+from src.repositories.organization_repo import OrganizationRepository
 from src.services.building_service import BuildingService
+from src.services.organization_service import OrganizationService
 
-
-async def get_building_service(db: AsyncSession = Depends(get_session)) -> BuildingService:
-    return BuildingService(db)
+get_building_service = get_service_factory(BuildingRepository, Building, BuildingService)
+get_organization_service = get_service_factory(OrganizationRepository, Organization, OrganizationService)

@@ -1,7 +1,7 @@
 from sqlalchemy import String, ForeignKey, Index, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
-from src.core.database import Base
+from src.core import Base
 
 # Ассоциативная таблица организация-деятельность
 org_activity = Table(

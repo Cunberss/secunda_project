@@ -1,6 +1,6 @@
 from sqlalchemy import String, ForeignKey, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from src.core.database import Base
+from src.core import Base
 
 
 class Activity(Base):
