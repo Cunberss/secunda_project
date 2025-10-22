@@ -36,7 +36,6 @@ class BuildingOut(BuildingBase):
     id: int = Field(..., description="ID здания")
 
     class Config:
-        orm_mode = True
         from_attributes = True
         json_schema_extra = {
             "example": {
