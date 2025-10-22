@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -6,9 +6,11 @@ class Settings(BaseSettings):
     async_database_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/test_db"
     api_key: str = "12345"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False
+    )
 
 
 settings = Settings()
