@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel, Field, field_validator
@@ -11,6 +12,8 @@ class BuildingBase(BaseModel):
     latitude: float = Field(..., ge=-90, le=90, description="Широта от -90 до 90")
     longitude: float = Field(..., ge=-180, le=180, description="Долгота от -180 до 180")
     organizations: List[OrganizationBase]
+    created_at: datetime
+    updated_at: datetime
 
     @field_validator("address")
     def validate_address(cls, v):
@@ -27,5 +30,7 @@ class BuildingBase(BaseModel):
                 "latitude": 55.7558,
                 "longitude": 37.6176,
                 "organizations": [],
+                "created_at": "2025-10-23T07:59:55.467718",
+                "updated_at": "2025-10-23T07:59:55.467718"
             }
         }
