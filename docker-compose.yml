@@ -11,8 +11,6 @@ services:
       POSTGRES_DB: app_db
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   web:
     build: .
@@ -26,8 +24,6 @@ services:
       API_KEY: 12345
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
     command: >
       sh -c "python3 -m scripts.install_postgis && alembic upgrade head && python3 -m scripts.create_test_data &&
              uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
