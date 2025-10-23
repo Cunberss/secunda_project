@@ -2,6 +2,7 @@ from sqlalchemy import String, ForeignKey, Index, Table, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import JSONB
 from src.core import Base
+from src.models.mixins import BaseModelMixin
 
 # Ассоциативная таблица организация-деятельность
 org_activity = Table(
@@ -12,7 +13,7 @@ org_activity = Table(
 )
 
 
-class Organization(Base):
+class Organization(Base, BaseModelMixin):
     __tablename__ = "organizations"
 
     id: Mapped[int] = mapped_column(primary_key=True)

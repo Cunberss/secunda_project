@@ -2,9 +2,10 @@ from sqlalchemy import String, Float, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from geoalchemy2 import Geometry
 from src.core import Base
+from src.models.mixins import BaseModelMixin
 
 
-class Building(Base):
+class Building(Base, BaseModelMixin):
     __tablename__ = "buildings"
 
     id: Mapped[int] = mapped_column(primary_key=True)

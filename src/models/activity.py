@@ -1,9 +1,10 @@
 from sqlalchemy import String, ForeignKey, Index
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.core import Base
+from src.models.mixins import BaseModelMixin
 
 
-class Activity(Base):
+class Activity(Base, BaseModelMixin):
     __tablename__ = "activities"
 
     id: Mapped[int] = mapped_column(primary_key=True)

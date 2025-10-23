@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update
 from typing import Generic, TypeVar, Type
 
 ModelType = TypeVar("ModelType")
@@ -11,12 +11,12 @@ class BaseRepository(Generic[ModelType]):
         self.db = session
 
     async def get_all(self):
-        result = await self.db.execute(select(self.model))
+        result = await self.db.execute(select(self.model).where(self.model.is_deleted == False))
         return result.scalars().all()
 
     async def get_by_id(self, obj_id: int):
         result = await self.db.execute(
-            select(self.model).where(self.model.id == obj_id)
+            select(self.model).where(self.model.id == obj_id).where(self.model.is_deleted == False)
         )
         return result.scalar_one_or_none()
 
@@ -37,3 +37,13 @@ class BaseRepository(Generic[ModelType]):
     async def delete(self, db_obj):
         await self.db.delete(db_obj)
         await self.db.commit()
+
+    async def soft_delete(self, db_obj: int):
+        query = (
+            update(self.model)
+            .where(self.model.id == db_obj)
+            .values(is_deleted=True)
+        )
+        await self.db.execute(query)
+        await self.db.commit()
+
