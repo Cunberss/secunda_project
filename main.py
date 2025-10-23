@@ -46,16 +46,6 @@ def custom_openapi():
 app.openapi = custom_openapi
 
 
-@app.get("/")
-async def root():
-    return {"message": "API is running"}
-
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-
 if __name__ == "__main__":
     import uvicorn
 
